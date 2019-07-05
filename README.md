@@ -40,6 +40,19 @@ Then do the export with this tool:
 4. `node src/index.js ./track-uris.txt`
 
 The result will be a nicely printed list of track names, artists, and albums.
+
+```
+1. Songbird - 2004 Remaster - Fleetwood Mac (Rumours)
+
+2. New Kid in Town - 2013 Remaster - Eagles (Hotel California (2013 Remaster))
+
+3. Dreams - 2004 Remaster - Fleetwood Mac (Rumours)
+
+4. Take It to the Limit - 2013 Remaster - Eagles (One of These Nights (2013 Remaster))
+
+5. A Horse with No Name - America (America)
+```
+
 Feel free to redirect to a file:
 
 ```
