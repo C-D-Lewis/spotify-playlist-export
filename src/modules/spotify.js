@@ -1,6 +1,5 @@
 const base64 = require('base-64');
 const request = require('request-promise-native');
-const util = require('./util');
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 

@@ -6,6 +6,9 @@
   "keywords": ["Spotify", "export", "playlist"],
   "author": "Chris Lewis",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "dependencies": {
     "base-64": "^0.1.0",
     "request": "^2.88.0",
