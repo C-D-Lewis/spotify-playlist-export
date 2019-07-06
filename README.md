@@ -1,9 +1,10 @@
 # spotify-uri-export
 
-Node.js script to export a Spotify playlist from a list of URIs.
+Node.js script to export a Spotify playlist to a text file, either a track list
+or as JSON data.
 
 Amazingly there's no way to do this from the Spotify app or any of its current
-export formats (URIs or playlist URLs).
+export formats (URIs or playlist URLs), so I created one.
 
 
 ## Install
@@ -16,18 +17,6 @@ export formats (URIs or playlist URLs).
 
 ## Usage
 
-1. Open the playlist to export as track details.
-2. Select all (Cmd - A or Ctrl - A) and copy (Cmd - C or Ctrl - C).
-3. Paste the content into a file, such as `track-uris.txt`:
-
-```
-https://open.spotify.com/track/2JoUtztTqCN4ZhmbRDGPIL
-https://open.spotify.com/track/6Zyz8lsnMFpIrCTuvGurCB
-https://open.spotify.com/track/5TDZyWDfbQFQJabbPwImVY
-https://open.spotify.com/track/2cWHN0WK52RGAWHgaDamUA
-https://open.spotify.com/track/54eZmuggBFJbV7k248bTTt
-```
-
 Export your credentials:
 
 ```
@@ -35,28 +24,53 @@ export CLIENT_ID=...
 export CLIENT_SECRET=...
 ```
 
-Then do the export with this tool:
+Then do the export, specifying the playlist URL or URL
+(from the Spotify share UI):
 
-4. `node src/index.js ./track-uris.txt`
+```
+npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.txt
+```
 
 The result will be a nicely printed list of track names, artists, and albums.
 
 ```
-1. Songbird - 2004 Remaster - Fleetwood Mac (Rumours)
+1. Bohemian Rhapsody - Queen (Bohemian Rhapsody (The Original Soundtrack))
+2. Don't Stop Me Now - Remastered - Queen (Jazz (Deluxe Remastered Version))
+3. You're My Best Friend - Remastered 2011 - Queen (A Night At The Opera (Deluxe Remastered Version))
 
-2. New Kid in Town - 2013 Remaster - Eagles (Hotel California (2013 Remaster))
-
-3. Dreams - 2004 Remaster - Fleetwood Mac (Rumours)
-
-4. Take It to the Limit - 2013 Remaster - Eagles (One of These Nights (2013 Remaster))
-
-5. A Horse with No Name - America (America)
+...
 ```
 
-Feel free to redirect to a file:
+If the output path name contains `json`, data is written instead:
 
 ```
-node src/index.js ./track-uris.txt > track-list.txt
+npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.json
 ```
 
-@Spotify - 'Power User' or rarely used features can be useful!
+```
+[
+  {
+    "number": 1,
+    "name": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "album": "Bohemian Rhapsody (The Original Soundtrack)"
+  },
+  {
+    "number": 2,
+    "name": "Don't Stop Me Now - Remastered",
+    "artist": "Queen",
+    "album": "Jazz (Deluxe Remastered Version)"
+  },
+  {
+    "number": 3,
+    "name": "You're My Best Friend - Remastered 2011",
+    "artist": "Queen",
+    "album": "A Night At The Opera (Deluxe Remastered Version)"
+  },
+
+  ...
+]
+```
+
+@Spotify - 'Power User' or rarely used features can be useful when they are
+required!
