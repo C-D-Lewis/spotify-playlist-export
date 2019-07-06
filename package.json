@@ -1,14 +1,11 @@
 {
-  "name": "spotify-uri-export",
+  "name": "spotify-playlist-export",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Script to export Spotify playlists to text formats.",
+  "main": "src/index.js",
+  "keywords": ["Spotify", "export", "playlist"],
+  "author": "Chris Lewis",
+  "license": "MIT",
   "dependencies": {
     "base-64": "^0.1.0",
     "request": "^2.88.0",
