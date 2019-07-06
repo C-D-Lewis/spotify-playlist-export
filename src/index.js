@@ -44,6 +44,11 @@ const getTrackListJson = tracks => tracks.reduce((res, t, i) => res.concat({
   album: t.album.name,
 }), []);
 
+/**
+ * Write the output file. If the path includes 'json', write JSON data.
+ *
+ * @param {object[]} tracks - The track list.
+ */
 const writeFile = (tracks) => {
   if (outPath.includes('json')) {
     fs.writeFileSync(outPath, JSON.stringify(getTrackListJson(tracks), null, 2), 'utf8');
@@ -65,6 +70,7 @@ const main = async () => {
   const tracks = await spotify.getPlaylistTracks(getPlaylistId(), token);
 
   writeFile(tracks);
+  console.log(`Wrote ${outPath}`);
 };
 
 main();
