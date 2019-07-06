@@ -1,4 +1,5 @@
 const base64 = require('base-64');
+const request = require('request-promise-native');
 const util = require('./util');
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
@@ -8,13 +9,21 @@ if (!CLIENT_ID || !CLIENT_SECRET) {
 }
 
 /**
+ * Request and return JSON.
+ *
+ * @param {object} opts - Standard request options.
+ * @returns {object}
+ */
+const requestJson = async opts => request(opts).then(res => JSON.parse(res));
+
+/**
  * Get an access token as a Spotify Application using Client Credentials flow.
  *
  * @returns {string} The access token.
  */
 const getAccessToken = async () => {
   try {
-    const { access_token } = await util.requestJson({
+    const { access_token } = await requestJson({
       url: 'https://accounts.spotify.com/api/token',
       method: 'POST',
       headers: {
@@ -32,18 +41,38 @@ const getAccessToken = async () => {
 };
 
 /**
- * Get track data by ID.
+ * Get a page from a Playlist, limit 100 per page.
  *
- * @param {string} id - The Spotify track ID from the URI list file.
- * @param {string} token - The API token.
- * @returns {object} Track data.
+ * @param {string} url - Page URL.
+ * @param {string} token - The access token.
+ * @returns {object} The response.
  */
-const getTrack = async (id, token) => util.requestJson({
-  url: `https://api.spotify.com/v1/tracks/${id}`,
+const getPlaylistPage = async (url, token) => requestJson({
+  url,
   headers: { Authorization: `Bearer ${token}` },
 });
 
+/**
+ * Get all track objects from a given playlist ID.
+ *
+ * @param {string} id - The playlist ID.
+ * @param {string} token - The access token.
+ * @returns {object[]} List of track objects.
+ */
+const getPlaylistTracks = async (id, token) => {
+  const all = [];
+  let page = await getPlaylistPage(`https://api.spotify.com/v1/playlists/${id}/tracks`, token);
+  all.push(...page.items);
+
+  while (page.next) {
+    page = await getPlaylistPage(page.next, token);
+    all.push(...page.items);
+  }
+
+  return all.map(item => item.track);
+};
+
 module.exports = {
   getAccessToken,
-  getTrack,
+  getPlaylistTracks,
 };
