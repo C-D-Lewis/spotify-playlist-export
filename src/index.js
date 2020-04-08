@@ -9,13 +9,8 @@ const [arg, outPath] = process.argv.slice(2);
  * @returns {string} The playlist ID.
  */
 const getPlaylistId = () => {
-  if (arg.includes('spotify:playlist:')) {
-    return arg.split(':')[2];
-  }
-
-  if (arg.includes('https://open.spotify.com/playlist/')) {
-    return arg.split('?')[0].split('/').pop();
-  }
+  if (arg.includes('spotify:playlist:')) return arg.split(':')[2];
+  if (arg.includes('https://open.spotify.com/playlist/')) return arg.split('?')[0].split('/').pop();
 
   throw new Error('Please specify either a Spotify URI or Spotify playlist URL.');
 };
