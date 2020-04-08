@@ -1,4 +1,4 @@
-# spotify-uri-export
+# spotify-playlist-export
 
 Node.js script to export a Spotify playlist to a text file, either a track list
 or as JSON or CSV data.

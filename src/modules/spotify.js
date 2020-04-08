@@ -1,5 +1,5 @@
 const base64 = require('base-64');
-const request = require('request-promise-native');
+const fetch = require('node-fetch');
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 
@@ -10,10 +10,11 @@ if (!CLIENT_ID || !CLIENT_SECRET) {
 /**
  * Request and return JSON.
  *
+ * @param {string} url - URL to fetch.
  * @param {object} opts - Standard request options.
  * @returns {object}
  */
-const requestJson = async opts => request(opts).then(res => JSON.parse(res));
+const fetchJson = async (url, opts) => fetch(url, opts).then(res => res.json());
 
 /**
  * Get an access token as a Spotify Application using Client Credentials flow.
@@ -22,8 +23,7 @@ const requestJson = async opts => request(opts).then(res => JSON.parse(res));
  */
 const getAccessToken = async () => {
   try {
-    const { access_token } = await requestJson({
-      url: 'https://accounts.spotify.com/api/token',
+    const { access_token } = await fetchJson('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -46,8 +46,7 @@ const getAccessToken = async () => {
  * @param {string} token - The access token.
  * @returns {object} The response.
  */
-const getPlaylistPage = async (url, token) => requestJson({
-  url,
+const getPlaylistPage = async (url, token) => fetchJson(url, {
   headers: { Authorization: `Bearer ${token}` },
 });
 
