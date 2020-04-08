@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Script to export Spotify playlists to various text formats.",
   "main": "src/index.js",
-  "keywords": ["Spotify", "export", "playlist"],
+  "keywords": [
+    "Spotify",
+    "export",
+    "playlist"
+  ],
   "author": "Chris Lewis",
   "license": "MIT",
   "scripts": {
