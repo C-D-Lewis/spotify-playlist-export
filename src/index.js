@@ -1,5 +1,5 @@
 const fs = require('fs');
-const spotify = require('./modules/spotify');
+const { getAccessToken, getPlaylistTracks } = require('./modules/spotify');
 
 const [arg, outPath] = process.argv.slice(2);
 
@@ -23,35 +23,57 @@ const getPlaylistId = () => {
 /**
  * Get all tracks as a list string.
  *
- * @param {object[]} tracks - The track list.
+ * @param {Object[]} tracks - The track list.
  * @returns {string} Track list information as a string.
  */
-const getTrackListString = tracks => tracks.reduce(
-  (res, t, i) => `${res}\n${i + 1}. ${t.name} - ${t.artists[0].name} (${t.album.name})`,
-  ''
-).trim();
+const getTrackListString = tracks => tracks
+  .map((t, i) => `${t.artists[0].name} - ${t.name} (${t.album.name})`)
+  .join('\n')
+  .trim();
 
 /**
  * Get all tracks as a simplified JSON format.
  *
- * @param {object[]} tracks - The track list.
- * @returns {object[]} Track list information as an object list.
+ * @param {Object[]} tracks - The track list.
+ * @returns {Object[]} Track list information as an object list.
  */
-const getTrackListJson = tracks => tracks.reduce((res, t, i) => res.concat({
-  number: i + 1,
-  name: t.name,
-  artist: t.artists[0].name,
-  album: t.album.name,
-}), []);
+const getTrackListJson = tracks => tracks
+  .map((t, i) => ({
+    number: i + 1,
+    name: t.name,
+    artist: t.artists[0].name,
+    album: t.album.name,
+  }));
 
 /**
- * Write the output file. If the path includes 'json', write JSON data.
+ * Get all tracks as a CSV file of the main attributes.
  *
- * @param {object[]} tracks - The track list.
+ * @param {Object[]} tracks - The track list.
+ * @returns {string} Track list information as a CSV file.
+ */
+const getTrackListCsv = tracks => {
+  const headers = 'Number,Name,Artist,Album\n';
+  const trackLines = tracks
+    .map((t, i) => `${i + 1},${t.name},${t.artists[0].name},${t.album.name}\n`)
+    .join('');
+  return headers
+    .concat(trackLines)
+    .trim();
+};
+
+/**
+ * Write the output file as a list, JSON, or CSV.
+ *
+ * @param {Object[]} tracks - The track list.
  */
 const writeFile = (tracks) => {
   if (outPath.includes('json')) {
     fs.writeFileSync(outPath, JSON.stringify(getTrackListJson(tracks), null, 2), 'utf8');
+    return;
+  }
+
+  if (outPath.includes('csv')) {
+    fs.writeFileSync(outPath, getTrackListCsv(tracks), 'utf8');
     return;
   }
 
@@ -62,12 +84,10 @@ const writeFile = (tracks) => {
  * The main function.
  */
 const main = async () => {
-  if (!outPath) {
-    throw new Error('Please specify an output path, such as output.txt or output.json');
-  }
+  if (!outPath) throw new Error('$ node src/index.js $outPath.[json|txt|csv]');
 
-  const token = await spotify.getAccessToken();
-  const tracks = await spotify.getPlaylistTracks(getPlaylistId(), token);
+  const token = await getAccessToken();
+  const tracks = await getPlaylistTracks(getPlaylistId(), token);
 
   writeFile(tracks);
   console.log(`Wrote ${outPath}`);
