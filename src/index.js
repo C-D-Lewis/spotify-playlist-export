@@ -27,7 +27,7 @@ const getPlaylistId = () => {
  * @returns {string} Track list information as a string.
  */
 const getTrackListString = tracks => tracks
-  .map((t, i) => `${t.artists[0].name} - ${t.name} (${t.album.name})`)
+  .map((t, i) => `${i + 1} ${t.artists[0].name} - ${t.name} (${t.album.name})`)
   .join('\n')
   .trim();
 

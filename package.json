@@ -1,7 +1,7 @@
 {
   "name": "spotify-playlist-export",
   "version": "1.0.0",
-  "description": "Script to export Spotify playlists to text formats.",
+  "description": "Script to export Spotify playlists to various text formats.",
   "main": "src/index.js",
   "keywords": ["Spotify", "export", "playlist"],
   "author": "Chris Lewis",
