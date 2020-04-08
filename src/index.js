@@ -49,7 +49,7 @@ const getTrackListJson = tracks => tracks
 const getTrackListCsv = tracks => {
   const headers = 'Number,Name,Artist,Album\n';
   const trackLines = tracks
-    .map((t, i) => `${i + 1},${t.name},${t.artists[0].name},${t.album.name}\n`)
+    .map((t, i) => `${i + 1},"${t.name}","${t.artists[0].name}","${t.album.name}"\n`)
     .join('');
   return headers
     .concat(trackLines)
