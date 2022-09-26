@@ -46,8 +46,18 @@ const getAccessToken = async () => {
  * @param {string} token - The access token.
  * @returns {object} The response.
  */
-const getPlaylistPage = async (url, token) =>
+const apiRequest = async (url, token) =>
   fetchJson(url, { headers: { Authorization: `Bearer ${token}` } });
+
+/**
+ * Get playlist data.
+ *
+ * @param {string} id - The playlist ID.
+ * @param {string} token - The access token.
+ * @returns {object}
+ */
+const getPlaylistData = async (id, token) =>
+  apiRequest(`https://api.spotify.com/v1/playlists/${id}`, token);
 
 /**
  * Get all track objects from a given playlist ID.
@@ -58,11 +68,11 @@ const getPlaylistPage = async (url, token) =>
  */
 const getPlaylistTracks = async (id, token) => {
   const results = [];
-  let page = await getPlaylistPage(`https://api.spotify.com/v1/playlists/${id}/tracks`, token);
+  let page = await apiRequest(`https://api.spotify.com/v1/playlists/${id}/tracks`, token);
   results.push(...page.items);
 
   while (page.next) {
-    page = await getPlaylistPage(page.next, token);
+    page = await apiRequest(page.next, token);
     results.push(...page.items);
   }
 
@@ -72,4 +82,5 @@ const getPlaylistTracks = async (id, token) => {
 module.exports = {
   getAccessToken,
   getPlaylistTracks,
+  getPlaylistData,
 };

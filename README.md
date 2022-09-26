@@ -6,6 +6,9 @@ or as JSON or CSV data.
 Amazingly there's no way to do this from the Spotify app or any of its current
 export formats (URIs or playlist URLs), so I created one.
 
+* [Install](#install)
+* [Usage](#usage)
+
 
 ## Install
 
@@ -27,19 +30,20 @@ export CLIENT_SECRET=...
 
 ### Text File
 
-Then do the export, specifying the playlist URL or URL (from the Spotify share
-UI):
+Then do the export, specifying the output format and playlist URI or URL (from
+the Spotify share UI):
 
 ```
-npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.txt
+npm start csv spotify:playlist:595cY5S1FpMpiEIWsk6dG7
 ```
 
 The result will be a nicely printed list of track names, artists, and albums.
 
 ```
-1 Queen - Bohemian Rhapsody (Bohemian Rhapsody (The Original Soundtrack))
-2 Queen - Don't Stop Me Now - Remastered (Jazz (Deluxe Remastered Version))
-3 Queen - You're My Best Friend - Remastered 2011 (A Night At The Opera (Deluxe Remastered Version))
+Number,Name,Artist,Album
+1,Bohemian Rhapsody,Queen,Bohemian Rhapsody (The Original Soundtrack)
+2,Don't Stop Me Now - Remastered,Queen,Jazz (Deluxe Remastered Version)
+3,You're My Best Friend - Remastered 2011,Queen,A Night At The Opera (Deluxe Remastered Version)
 ```
 
 
@@ -48,7 +52,7 @@ The result will be a nicely printed list of track names, artists, and albums.
 If the output path name contains `json`, data is written instead:
 
 ```
-npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.json
+npm start json spotify:playlist:595cY5S1FpMpiEIWsk6dG7
 ```
 
 ```
@@ -81,7 +85,7 @@ npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.json
 If the output path name contains `csv`, CSV data is written instead:
 
 ```
-npm start spotify:playlist:595cY5S1FpMpiEIWsk6dG7 playlist.csv
+npm start csv spotify:playlist:595cY5S1FpMpiEIWsk6dG7
 ```
 
 ```

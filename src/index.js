@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { getAccessToken, getPlaylistTracks } = require('./modules/spotify');
+const { getAccessToken, getPlaylistTracks, getPlaylistData } = require('./modules/spotify');
 
-const [arg, outPath] = process.argv.slice(2);
+const [outType, uri] = process.argv.slice(2);
 
 /**
  * Get playlist ID from either a URI or URL.
@@ -9,8 +9,8 @@ const [arg, outPath] = process.argv.slice(2);
  * @returns {string} The playlist ID.
  */
 const getPlaylistId = () => {
-  if (arg.includes('spotify:playlist:')) return arg.split(':')[2];
-  if (arg.includes('https://open.spotify.com/playlist/')) return arg.split('?')[0].split('/').pop();
+  if (uri.includes('spotify:playlist:')) return uri.split(':')[2];
+  if (uri.includes('https://open.spotify.com/playlist/')) return uri.split('?')[0].split('/').pop();
 
   throw new Error('Please specify either a Spotify URI or Spotify playlist URL.');
 };
@@ -59,33 +59,43 @@ const getTrackListCsv = tracks => {
 /**
  * Write the output file as a list, JSON, or CSV.
  *
+ * @param {string} outFileName - Playlist name.
  * @param {Object[]} tracks - The track list.
  */
-const writeFile = (tracks) => {
-  if (outPath.includes('json')) {
-    fs.writeFileSync(outPath, JSON.stringify(getTrackListJson(tracks), null, 2), 'utf8');
+const writeFile = (outFileName, tracks) => {
+  if (outType.includes('json')) {
+    fs.writeFileSync(outFileName, JSON.stringify(getTrackListJson(tracks), null, 2), 'utf8');
     return;
   }
 
-  if (outPath.includes('csv')) {
-    fs.writeFileSync(outPath, getTrackListCsv(tracks), 'utf8');
+  if (outType.includes('csv')) {
+    fs.writeFileSync(`${outFileName}`, getTrackListCsv(tracks), 'utf8');
     return;
   }
 
-  fs.writeFileSync(outPath, getTrackListString(tracks), 'utf8');
+  fs.writeFileSync(`${outFileName}`, getTrackListString(tracks), 'utf8');
 };
 
 /**
  * The main function.
  */
 const main = async () => {
-  if (!outPath) throw new Error('$ node src/index.js $outPath.[json|txt|csv]');
+  if (!outType) throw new Error('$ node src/index.js $uri [json|txt|csv]');
 
   const token = await getAccessToken();
-  const tracks = await getPlaylistTracks(getPlaylistId(), token);
+  const id = getPlaylistId();
+  const tracks = await getPlaylistTracks(id, token);
+  const { name } = await getPlaylistData(id, token);
 
-  writeFile(tracks);
-  console.log(`Wrote ${outPath}`);
+  const outName = name
+    .split(' ').join('/')
+    .split('\'').join('')
+    .split(',').join('')
+    .split('/').join('-');
+  const outFileName = `${outName}.${outType}`;
+
+  writeFile(outFileName, tracks);
+  console.log(`Wrote ${outFileName}`);
 };
 
 main();
